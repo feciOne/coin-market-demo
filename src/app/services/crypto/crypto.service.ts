@@ -64,7 +64,7 @@ export class CryptoService {
       )
       .subscribe((data: Crypto.Item[]) => {
         const coin = data.find(
-          (item) => item.symbol === this._selectedCoin!.symbol
+          (item) => item.symbol === this._selectedCoin?.symbol
         );
         this.list.next(data);
         this.listBackup = data;
