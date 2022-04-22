@@ -1,0 +1,8 @@
+<mat-form-field appearance="fill">
+  <mat-label>Select a currency</mat-label>
+  <mat-select [(value)]="selectedCurrency" (valueChange)="currencyChanged()">
+    <mat-option *ngFor="let item of currencyList" [value]="item.id">
+      {{ item.id }} - {{ item.name }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>

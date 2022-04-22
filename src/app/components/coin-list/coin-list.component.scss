@@ -1,0 +1,19 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: -moz-available;
+  height: -webkit-fill-available;
+  height: stretch;
+
+  .mat-list-base {
+    padding-top: 0;
+  }
+
+  .viewport {
+    display: flex;
+    flex-direction: column;
+    height: -moz-available;
+    height: -webkit-fill-available;
+    height: stretch;
+  }
+}

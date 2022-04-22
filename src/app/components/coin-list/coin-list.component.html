@@ -1,0 +1,11 @@
+<cdk-virtual-scroll-viewport #scrollEl itemSize="30" class="viewport">
+  <mat-selection-list #listEl [multiple]="false" (selectionChange)="updateSelection($event)">
+    <mat-list-option
+      *cdkVirtualFor="let coin of coinList;
+      let last = last"
+      [value]="coin.symbol"
+    >
+      {{ coin.name }}
+    </mat-list-option>
+  </mat-selection-list>
+</cdk-virtual-scroll-viewport>

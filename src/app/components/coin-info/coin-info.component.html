@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-title-group>
+    <mat-card-title>
+      {{ data.name }} ({{ data.symbol | uppercase }})
+    </mat-card-title>
+    <mat-card-subtitle>{{ data.last_updated }}</mat-card-subtitle>
+    <img mat-card-sm-image [src]="data.image" >
+  </mat-card-title-group>
+  <mat-card-content>
+    <p><strong>Highest Price (24h):</strong> {{ data.high_24h | myCurrency }}</p>
+    <p><strong>Current Price:</strong> {{ data.current_price | myCurrency }}</p>
+    <p><strong>Lowest Price (24h):</strong> {{ data.low_24h | myCurrency }}</p>
+  </mat-card-content>
+</mat-card>

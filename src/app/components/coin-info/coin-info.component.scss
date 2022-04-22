@@ -1,0 +1,21 @@
+:host {
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+
+  .mat-card {
+    width: 40vw;
+    height: 30vh;
+
+    .mat-card-content {
+      height: 30vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-content: center;
+      align-items: center;
+    }
+  }
+}
