@@ -44,7 +44,7 @@ export class CoinInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     interval(10000)
       .pipe(
         switchMap(() =>
-          this.cryptoService.getCoinsMarketData(this.data.symbol)
+          this.cryptoService.getCoinsMarketData(this.data.id)
         ),
         takeUntil(this.destroy$)
       )
@@ -57,5 +57,7 @@ export class CoinInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next(true);
     this.destroy$.complete();
+
+    sessionStorage.removeItem('coinId');
   }
 }

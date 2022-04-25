@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resolve, ActivatedRouteSnapshot } from '@angular/router';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { Crypto } from '../models/crypto.model';
 import { CryptoService } from '../services/crypto/crypto.service';
 
@@ -11,20 +11,15 @@ export class CoinDataResolver implements Resolve<Crypto.Item[]> {
   constructor(private cryptoService: CryptoService) {}
 
   resolve(route: ActivatedRouteSnapshot): Observable<Crypto.Item[]> {
-    const symbol = route.paramMap.get('symbol');
+    const idParam = route.paramMap.get('id');
+    const id = idParam ? idParam : 'bitcoin';
+    sessionStorage.setItem('coinId', id);
 
-    return this.cryptoService.getCoinList().pipe(
+    return this.cryptoService.getCoinsMarketData(id).pipe(
       tap((data) => {
-        this.cryptoService.list.next(data);
-        this.cryptoService.listBackup = data;
-      }),
-      switchMap(() =>
-        this.cryptoService.getCoinsMarketData(symbol).pipe(
-          tap((data) => {
-            this.cryptoService.selected = data[0];
-          })
-        )
-      )
+        this.cryptoService.selected = data[0].id;
+        this.cryptoService.selectedCoin.next(data[0]);
+      })
     );
   }
 }

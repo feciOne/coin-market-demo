@@ -1,4 +1,4 @@
-export type LoadingTypes = 'INITIAL' | 'INCREMENTAL' | 'RESET';
+export type LoadingTypes = 'CACHE' | 'MORE' | 'RESET';
 
 export namespace Crypto {
   export interface Roi {

@@ -32,10 +32,10 @@ export class CryptoService {
   list = new BehaviorSubject<Crypto.Item[]>([]);
 
   set selected(data: string | Crypto.Item) {
-    const symbol = typeof data === 'string' ? data : data.symbol;
+    const id = typeof data === 'string' ? data : data.id;
 
     this._selectedCoin = this.listBackup.find(
-      (coin: Crypto.Item) => coin.symbol === symbol
+      (coin: Crypto.Item) => coin.id === id
     );
     this.selectedCoin.next(
       this._selectedCoin ? this._selectedCoin : ({} as Crypto.Item)
@@ -60,23 +60,29 @@ export class CryptoService {
           this._prevCurrency = this._selectedCurrency;
           this._selectedCurrency = currency;
         }),
-        switchMap(() => this.getCoinList('RESET'))
+        switchMap(() =>
+          this.listBackup.length > 0
+            ? this.getCoinsMarketData(this.getLastCoinsId())
+            : this.getCoinList('RESET')
+        )
       )
       .subscribe((data: Crypto.Item[]) => {
-        const coin = data.find(
-          (item) => item.symbol === this._selectedCoin?.symbol
-        );
-        this.list.next(data);
-        this.listBackup = data;
-        this.selectedCoin.next(coin ? coin : ({} as Crypto.Item));
+        const coin = data.find((item) => item.id === this._selectedCoin?.id);
+
+        if (data.length > 1) {
+          this.list.next(data);
+          this.listBackup = data;
+        }
+
+        this.selectedCoin.next(coin ? coin : data[0]);
       });
   }
 
   getCoinList(
-    loadingType: LoadingTypes = 'INITIAL'
+    loadingType: LoadingTypes = 'CACHE'
   ): Observable<Crypto.Item[]> {
     this._page =
-      loadingType === 'INCREMENTAL'
+      loadingType === 'MORE'
         ? ++this._page
         : loadingType === 'RESET'
         ? 1
@@ -88,7 +94,7 @@ export class CryptoService {
       .set('per_page', 250)
       .set('page', this._page);
 
-    if (loadingType === 'INITIAL' && this.listBackup.length > 0) {
+    if (loadingType === 'CACHE' && this.listBackup.length > 0) {
       return of(this.listBackup);
     } else {
       return this.httpClient
@@ -110,14 +116,22 @@ export class CryptoService {
     }
   }
 
-  getCoinsMarketData(symbol: string | null): Observable<Crypto.Item[]> {
-    const id = this.listBackup.find((item) => item.symbol === symbol)?.id;
+  getCoinsMarketData(id: string): Observable<Crypto.Item[]> {
+    const lastId = this.getLastCoinsId();
+    id = lastId ? lastId : id;
+    const selected = this.listBackup.find((item) => item.id === id);
     const params = new HttpParams()
       .set('vs_currency', this._selectedCurrency)
-      .set('ids', id ? id : 'bitcoin');
+      .set('ids', selected ? selected.id : (typeof this.selected === 'string' && this.selected) ? this.selected : id );
 
     return this.httpClient
       .get<Crypto.Item[]>(this._apiUrl + '/coins/markets', { params })
       .pipe(take(1), retry(1));
+  }
+
+  private getLastCoinsId(): string {
+    const lastId = sessionStorage.getItem('coinId');
+
+    return lastId ? lastId : '';
   }
 }

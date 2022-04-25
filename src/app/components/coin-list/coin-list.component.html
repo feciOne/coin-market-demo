@@ -3,7 +3,7 @@
     <mat-list-option
       *cdkVirtualFor="let coin of coinList;
       let last = last"
-      [value]="coin.symbol"
+      [value]="coin.id"
     >
       {{ coin.name }}
     </mat-list-option>

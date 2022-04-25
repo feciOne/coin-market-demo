@@ -8,7 +8,7 @@ import { CoinDataResolver } from './resolvers/coin-data.resolver';
 const routes: Routes = [
   { path: '', component: IntroComponent, pathMatch: 'full' },
   {
-    path: 'info/:symbol',
+    path: 'info/:id',
     component: CoinInfoComponent,
     resolve: [CoinDataResolver],
   },

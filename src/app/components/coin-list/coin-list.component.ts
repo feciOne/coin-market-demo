@@ -62,7 +62,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
           this._lockLoading = true;
 
           this.cryptoService
-            .getCoinList('INCREMENTAL')
+            .getCoinList('MORE')
             .pipe(
               take(1),
               finalize(() => (this._lockLoading = false))
@@ -84,7 +84,7 @@ export class CoinListComponent implements OnInit, OnDestroy {
 
   updateSelection(selection: MatSelectionListChange): void {
     this.cryptoService.selected = selection.options[0].value;
-    this.router.navigate(['info', this.cryptoService.selected.symbol]);
+    this.router.navigate(['info', this.cryptoService.selected.id]);
   }
 
   ngOnDestroy(): void {
